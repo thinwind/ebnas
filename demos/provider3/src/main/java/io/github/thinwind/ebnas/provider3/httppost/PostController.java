@@ -11,10 +11,11 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package io.github.thinwind.ebnas.consumer.httpdemo;
+package io.github.thinwind.ebnas.provider3.httppost;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.IOException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,22 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-public class TestController {
+public class PostController {
 
-    @Autowired
-    TestService testService;
-
-    @GetMapping("/get-provider2")
-    public Object getProvider2() throws Exception {
-        String url = "http://provider2/get-mock";
-        return testService.getString(url);
+    @PostMapping("/post-mock")
+    public Object postMock() throws IOException {
+        Map<String, String> result = new HashMap<>();
+        result.put("Echo", "Hello From Cluster2.Provider1 Post");
+        return result;
     }
-    
-    
-    @PostMapping("/post-provider1")
-    public Object postProvider1() throws Exception {
-        String url = "http://provider1/post-mock";
-        return testService.postString(url);
-    }
-
 }

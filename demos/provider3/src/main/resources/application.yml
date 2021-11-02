@@ -1,5 +1,5 @@
 server:
-  port: 9089
+  port: 8289
   servlet:
     context-path: /
   #######################################
@@ -15,8 +15,7 @@ server:
     max-http-post-size: 500MB
     
 ebnas:
-  local-server-addr: 192.168.31.228:8848
-  remote-server-addr: 192.168.31.228:8849
+  server-addr: 192.168.31.228:8849
     
 # spring:
 #   datasource:

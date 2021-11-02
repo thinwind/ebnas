@@ -13,6 +13,7 @@
  */
 package io.github.thinwind.ebnas.consumer.httpdemo;
 
+import java.util.concurrent.ExecutionException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import com.alibaba.nacos.api.exception.NacosException;
@@ -44,5 +45,16 @@ public class TestService {
         int port = provider.getPort();
         String targetUri = uri.getRawPath();
         return AsyncHttpUtil.get(hostName, port, targetUri);
+    }
+    
+    public String postString(String url) throws URISyntaxException, NacosException, InterruptedException, ExecutionException {
+        URI uri = new URI(url);
+        String serviceName = uri.getHost();
+
+        Instance provider = namingService.selectOneHealthyInstance(serviceName);
+        String hostName = provider.getIp();
+        int port = provider.getPort();
+        String targetUri = uri.getRawPath();
+        return AsyncHttpUtil.post(hostName, port, targetUri);
     }
 }

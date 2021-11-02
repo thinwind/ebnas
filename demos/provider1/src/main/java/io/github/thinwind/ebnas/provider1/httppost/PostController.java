@@ -33,7 +33,7 @@ public class PostController {
     @PostMapping("/post-mock")
     public Object postMock() throws IOException {
         Map<String, String> result = new HashMap<>();
-        result.put("Echo", "Hello From Provider1 Post");
+        result.put("Echo", "Hello From Cluster1.Provider1 Post");
         return result;
     }
 }

@@ -1,4 +1,4 @@
-package io.github.thinwind.ebnas.provider2;
+package io.github.thinwind.ebnas.provider3;
 
 import java.util.Properties;
 import com.alibaba.nacos.api.naming.NamingFactory;
@@ -9,14 +9,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableScheduling
 @SpringBootApplication
-public class DemoApplication {
+public class Provider3Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(Provider3Application.class, args);
 
     }
 
@@ -28,8 +26,8 @@ public class DemoApplication {
                 properties.setProperty("serverAddr", serverAddr);
                 // properties.setProperty("namespace", "ebnas");
                 NamingService naming = NamingFactory.createNamingService(properties);
-                naming.registerInstance("provider2", NetUtil.localIP(), port);
-                System.out.println(naming.getAllInstances("provider2"));
+                naming.registerInstance("provider1", NetUtil.localIP(), port);
+                System.out.println(naming.getAllInstances("provider1"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -84,7 +84,7 @@ public class AsyncHttpUtil {
 
     static byte[] executeHttp(String method, String hostName, int port, String uri) {
         HttpHost host = new HttpHost(hostName, port);
-        SimpleHttpRequest simpleHttpRequest = new SimpleHttpRequest(HttpGet.METHOD_NAME, host, uri);
+        SimpleHttpRequest simpleHttpRequest = new SimpleHttpRequest(method, host, uri);
         Future<byte[]> future = httpClient.execute(SimpleRequestProducer.create(simpleHttpRequest),
                 responseConsumer(), null);
         try {
