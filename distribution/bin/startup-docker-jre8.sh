@@ -33,8 +33,9 @@ do
     esac
 done
 
-echo $SHELL
-echo "JAVA_HOME is $JAVA_HOME"
+if [ "x$HOST_IP" != "x" ]; then
+    JAVA_OPT="${JAVA_OPT} -Dnacos.server.ip=$HOST_IP"
+fi
 
 export JAVA="$JAVA_HOME/bin/java"
 export BASE_DIR=`cd $(dirname $0)/..; pwd`

@@ -4,6 +4,7 @@ FROM mrshang/jre8
 ADD distribution/target/nacos-server-1.1.3.tar.gz /home/
 
 ENV BASE_DIR="/home/nacos"
+	
 
 WORKDIR $BASE_DIR
 
