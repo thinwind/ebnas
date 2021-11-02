@@ -1,0 +1,18 @@
+# only need "distribution"
+a*
+c*
+distribution/target/nacos-server-1.1.3/
+doc
+e*
+n*
+s*
+t*
+w*
+README.md
+pom.xml
+.git
+.editorconfig
+.gitattributes
+.gitignore
+compile.sh
+!acos-consumer*.zip

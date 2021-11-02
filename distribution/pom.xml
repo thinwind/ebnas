@@ -47,6 +47,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <id>release-config</id>
@@ -79,6 +80,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <id>release-naming</id>
@@ -106,7 +108,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.3.0</version>
                         <configuration>
                             <descriptors>
                                 <descriptor>release-address.xml</descriptor>
@@ -137,6 +139,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <id>release-client</id>
@@ -169,6 +172,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <id>release-core</id>
@@ -201,7 +205,7 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.3.0</version>
                         <configuration>
                             <descriptors>
                                 <descriptor>release-nacos.xml</descriptor>
@@ -210,7 +214,7 @@
                         <executions>
                             <execution>
                                 <id>make-assembly</id>
-                                <phase>install</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>single</goal>
                                 </goals>

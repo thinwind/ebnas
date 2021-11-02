@@ -437,6 +437,7 @@
         <module>distribution</module>
         <module>console</module>
         <module>cmdb</module>
+        <module>demos</module>
     </modules>
 
     <!-- 所有的子项目默认依赖 -->
@@ -464,57 +465,57 @@
 
             <!-- Internal libs -->
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-naming</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-cmdb</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-console</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-distribution</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.alibaba.nacos</groupId>
                 <artifactId>nacos-example</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -746,4 +747,3 @@
         </repository>
     </distributionManagement>
 </project>
-
