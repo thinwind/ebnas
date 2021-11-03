@@ -3,23 +3,25 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.github.thinwind</groupId>
-        <artifactId>ebnas-demos</artifactId>
+        <groupId>com.alibaba.nacos</groupId>
+        <artifactId>nacos-all</artifactId>
         <version>1.1.3</version>
         <relativePath>../pom.xml</relativePath>
-        <!-- lookup parent from repository -->
     </parent>
-    <artifactId>ebnas-consumer</artifactId>
-    <name>ebnas-consumer ${project.version}</name>
+    
+    <groupId>com.github.thinwind</groupId>
+    <artifactId>ebnas-clusterhouse</artifactId>
+    <name>clusterhouse ${project.version}</name>
     <description>spring boot demos</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>8</java.version>
+        <resilience4jVersion>1.7.0</resilience4jVersion>
     </properties>
     <dependencies>
-        <!-- <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -41,11 +43,11 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
-        </dependency> -->
+        </dependency>
         <!-- <dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
@@ -66,17 +68,65 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>5.1</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+
+        <!-- <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.66.Final</version>
+        </dependency> -->
+        <!-- resilience4j start -->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-circuitbreaker</artifactId>
+            <version>${resilience4jVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-ratelimiter</artifactId>
+            <version>${resilience4jVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-retry</artifactId>
+            <version>${resilience4jVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-bulkhead</artifactId>
+            <version>${resilience4jVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-cache</artifactId>
+            <version>${resilience4jVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-timelimiter</artifactId>
+            <version>${resilience4jVersion}</version>
+        </dependency>
+        <!-- <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>0.10.4</version>
+        </dependency> -->
+        <!-- resilience4j end -->
 
     </dependencies>
 
@@ -86,7 +136,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>io.github.thinwind.ebnas.consumer.DemoApplication</mainClass>
+                    <mainClass>io.github.thinwind.clusterhouse.Starter</mainClass>
                 </configuration>
             </plugin>
         </plugins>
