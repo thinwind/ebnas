@@ -13,15 +13,11 @@
  */
 package io.github.thinwind.clusterhouse.controller;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.async.DeferredResult;
 import io.github.thinwind.clusterhouse.domain.Cluster;
 import io.github.thinwind.clusterhouse.domain.ClusterNode;
 import io.github.thinwind.clusterhouse.dto.NodeDto;
@@ -38,7 +34,7 @@ import io.github.thinwind.clusterhouse.dto.NodeDto;
 @RequestMapping("/openapi")
 public class ClusterNodeApi {
 
-    @PostMapping(path = "/register/", produces = {"application/json;charset=utf-8"})
+    @PostMapping("/register/")
     public Object register(@RequestBody NodeDto node) {
         Cluster cluster = Cluster.getInstance(node.getClusterName());
         ClusterNode clusterNode = new ClusterNode();
@@ -51,25 +47,5 @@ public class ClusterNodeApi {
     @GetMapping("/clusters")
     public Object snapshot() {
         return Cluster.snapshot();
-    }
-
-    @GetMapping("/test-void")
-    public void testVoid(HttpServletResponse response)
-            throws UnsupportedEncodingException, IOException {
-        response.getOutputStream().write("OK".getBytes("UTF-8"));
-    }
-
-    @GetMapping("/test-async")
-    public Object testAysnc() {
-        DeferredResult<String> result = new DeferredResult<String>();
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-                result.setResult("OK");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        return result;
     }
 }

@@ -17,7 +17,6 @@ import io.github.thinwind.clusterhouse.anno.DoNotWrap;
 import io.github.thinwind.clusterhouse.aware.ClientDataAware;
 import io.github.thinwind.clusterhouse.aware.DataContainer;
 import io.github.thinwind.clusterhouse.aware.ServerDataAware;
-import io.github.thinwind.clusterhouse.config.EnvConfig;
 import io.github.thinwind.clusterhouse.dto.HttpResult;
 import io.github.thinwind.clusterhouse.dto.PagedResult;
 import io.github.thinwind.clusterhouse.misc.Consts;
@@ -38,11 +37,8 @@ public class CommonResultAdvice
 
     private final ObjectMapper objectMapper;
 
-    private final EnvConfig envConfig;
-
-    public CommonResultAdvice(ObjectMapper objectMapper, EnvConfig envConfig) {
+    public CommonResultAdvice(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.envConfig = envConfig;
     }
 
     @Override

@@ -44,3 +44,16 @@ spring:
       settings:
         web-allow-others: true
       path: /h2-console
+      
+---
+#--------------jackson-----------------
+spring:
+  jackson:
+    default-property-inclusion: NON_NULL
+#spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+    parser:
+      # 允许json字符串带控制字符
+      ALLOW_UNQUOTED_CONTROL_CHARS: true
