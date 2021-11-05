@@ -1,0 +1,17 @@
+POST /openapi/register/ HTTP/1.1
+Host: 127.0.0.1:11011
+Content-Type: application/json
+
+{
+    "clusterName":"demo1",
+    "ip":"127.0.0.1",
+    "port":8089
+}
+
+###
+GET /openapi/test-async HTTP/1.1
+Host: 127.0.0.1:11011
+
+###
+GET /openapi/test-void HTTP/1.1
+Host: 127.0.0.1:11011

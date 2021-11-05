@@ -13,49 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.thinwind.clusterhouse.domain;
+package io.github.thinwind.clusterhouse.dto;
 
-import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
- * 集群节点
+ * TODO HttpResult说明
  *
  * @author Shang Yehua <niceshang@outlook.com>
- * @since 2021-11-03  18:56
+ * @since 2021-11-05  14:26
  *
  */
-@Setter
-@Getter
-public class ClusterNode {
+@Getter @Setter
+public class HttpResult {
+    private boolean success;
+    private Object data;
+    private String errorCode;
+    private String errorMessage;
+    private String traceId;
+    private String host;
     
-    private String ip;
-    
-    private int port;
-    
-    private NodeStatus status;
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(ip, port);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ClusterNode other = (ClusterNode) obj;
-        return Objects.equals(ip, other.ip) && port == other.port;
-    }
-    
-    
+    private Integer currentPage;
+    private Integer total;
+    private Integer pageSize;
 }

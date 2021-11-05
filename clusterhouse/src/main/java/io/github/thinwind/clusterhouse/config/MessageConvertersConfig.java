@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.thinwind.clusterhouse.domain;
+package io.github.thinwind.clusterhouse.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.List;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  *
- * TODO NodeVO说明
+ * TODO MessageConvertersConfig说明
  *
  * @author Shang Yehua <niceshang@outlook.com>
- * @since 2021-11-03  19:06
+ * @since 2021-11-05  15:38
  *
  */
-@Setter
-@Getter
-public class NodeDto {
+@Configuration
+public class MessageConvertersConfig implements WebMvcConfigurer {
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (HttpMessageConverter<?> converter : converters) {
+            System.out.println(converter);
+        }
+    }
     
-    private String clusterName;
-    
-    private String ip;
-    
-    private int port; 
 }
