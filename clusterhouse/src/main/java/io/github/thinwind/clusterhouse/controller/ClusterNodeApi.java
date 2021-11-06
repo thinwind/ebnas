@@ -13,6 +13,7 @@
  */
 package io.github.thinwind.clusterhouse.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.thinwind.clusterhouse.domain.Cluster;
 import io.github.thinwind.clusterhouse.domain.ClusterNode;
 import io.github.thinwind.clusterhouse.dto.NodeDto;
+import io.github.thinwind.clusterhouse.service.OpenApiService;
 
 /**
  *
@@ -33,14 +35,13 @@ import io.github.thinwind.clusterhouse.dto.NodeDto;
 @RestController
 @RequestMapping("/openapi")
 public class ClusterNodeApi {
+    
+    @Autowired
+    private OpenApiService openApiService;
 
     @PostMapping("/register/")
     public Object register(@RequestBody NodeDto node) {
-        Cluster cluster = Cluster.getInstance(node.getClusterName());
-        ClusterNode clusterNode = new ClusterNode();
-        clusterNode.setIp(node.getIp());
-        clusterNode.setPort(node.getPort());
-        cluster.addNode(clusterNode);
+        
         return "OK";
     }
 

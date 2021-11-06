@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.thinwind.clusterhouse.domain;
+package io.github.thinwind.clusterhouse.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import io.github.thinwind.clusterhouse.entity.ClusterNode;
 
 /**
  *
- * TODO NodeStatus说明
+ * TODO ClusterNodeRepo说明
  *
  * @author Shang Yehua <niceshang@outlook.com>
- * @since 2021-11-03  18:58
+ * @since 2021-11-06  16:33
  *
  */
-public enum NodeStatus {
-    HEALTHY,
-    UNKNOWN,
-    SHUTDOWN
+public interface ClusterNodeRepo extends JpaRepository<ClusterNode, Integer> {
+    
 }

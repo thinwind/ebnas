@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.thinwind.clusterhouse.domain;
+package io.github.thinwind.clusterhouse.entity;
 
+import java.util.Date;
 import java.util.Objects;
 
-import io.github.thinwind.clusterhouse.entity.NodeStatus;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import io.github.thinwind.clusterhouse.misc.Consts;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,13 +45,29 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@Entity
+@Table
 public class ClusterNode {
+
+    @Id
+    @GeneratedValue(generator = Consts.ID_GENERATOR)
+    private Integer id;
     
     private String ip;
-    
+
     private int port;
-    
-    private NodeStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private NodeStatus status = NodeStatus.HEALTHY;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(updatable = false)
+    @CreationTimestamp
+    private Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
+    private Date modifiedAt;
 
     @Override
     public int hashCode() {
@@ -58,6 +88,5 @@ public class ClusterNode {
         ClusterNode other = (ClusterNode) obj;
         return Objects.equals(ip, other.ip) && port == other.port;
     }
-    
-    
+
 }
