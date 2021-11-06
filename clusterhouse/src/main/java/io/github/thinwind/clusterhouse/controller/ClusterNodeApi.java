@@ -41,12 +41,12 @@ public class ClusterNodeApi {
 
     @PostMapping("/register/")
     public Object register(@RequestBody NodeDto node) {
-        
+        openApiService.refresh(node);
         return "OK";
     }
 
     @GetMapping("/clusters")
     public Object snapshot() {
-        return Cluster.snapshot();
+        return openApiService.allHealthyClusters();
     }
 }

@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.thinwind.clusterhouse.repo;
+package io.github.thinwind.clusterhouse.config;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import io.github.thinwind.clusterhouse.entity.ClusterNode;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 /**
  *
- * TODO ClusterNodeRepo说明
+ * TODO ClusterMaintainer说明
  *
  * @author Shang Yehua <niceshang@outlook.com>
- * @since 2021-11-06  16:33
+ * @since 2021-11-06  17:35
  *
  */
-public interface ClusterNodeRepo extends JpaRepository<ClusterNode, Integer> {
+@Component
+public class ClusterMaintainer {
     
-    ClusterNode findByName(String name);
+    @Scheduled()
+    public void maintain(){
+        
+    }
     
 }

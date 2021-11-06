@@ -1,4 +1,4 @@
-package io.github.thinwind.clusterhouse.web;
+package io.github.thinwind.clusterhouse.config;
 
 import java.lang.reflect.AnnotatedElement;
 import javax.servlet.http.HttpServletResponse;

@@ -15,7 +15,10 @@
  */
 package io.github.thinwind.clusterhouse.service;
 
+import java.util.List;
+
 import io.github.thinwind.clusterhouse.dto.NodeDto;
+import io.github.thinwind.clusterhouse.entity.Cluster;
 
 /**
  *
@@ -38,4 +41,9 @@ public interface OpenApiService {
      * 维护所有集群状态
      */
     void maintain();
+
+    /**
+     * 所有健康节点
+     */
+    List<Cluster> allHealthyClusters();
 }

@@ -1,4 +1,4 @@
-package io.github.thinwind.clusterhouse.web;
+package io.github.thinwind.clusterhouse.config;
 
 import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +10,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import io.github.thinwind.clusterhouse.aware.ClientDataMaintainer;
-import io.github.thinwind.clusterhouse.config.EnvConfig;
 import io.github.thinwind.clusterhouse.misc.Consts;
 import io.github.thinwind.clusterhouse.misc.NetUtil;
 
