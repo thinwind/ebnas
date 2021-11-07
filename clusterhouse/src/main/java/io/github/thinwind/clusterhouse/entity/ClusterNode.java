@@ -24,7 +24,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -46,12 +46,14 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table
 public class ClusterNode {
 
     @Id
     @GeneratedValue(generator = Consts.ID_GENERATOR)
     private Integer id;
+    
+    @ManyToOne
+    private Cluster cluster;
     
     private String ip;
 

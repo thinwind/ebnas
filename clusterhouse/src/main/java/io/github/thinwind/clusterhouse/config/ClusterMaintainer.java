@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClusterMaintainer {
     
-    @Scheduled()
+    // @Scheduled()
     public void maintain(){
         
     }

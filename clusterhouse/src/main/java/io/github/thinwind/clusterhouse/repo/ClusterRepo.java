@@ -29,4 +29,6 @@ import io.github.thinwind.clusterhouse.entity.Cluster;
  */
 public interface ClusterRepo extends JpaRepository<Cluster, Integer> {
     
+    Cluster findByName(String name);
+    
 }

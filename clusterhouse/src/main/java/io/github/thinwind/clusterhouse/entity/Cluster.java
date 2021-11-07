@@ -14,13 +14,12 @@
 package io.github.thinwind.clusterhouse.entity;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -32,6 +31,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import io.github.thinwind.clusterhouse.misc.Consts;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -41,17 +41,18 @@ import lombok.Getter;
  * @since 2021-11-03  19:02
  *
  */
+@Setter
+@Getter
+@Entity
 public class Cluster {
     
     @Id
     @GeneratedValue(generator = Consts.ID_GENERATOR)
     private Integer id;
 
-    @Getter
-    private final String name;
+    private String name;
 
-    @Getter
-    @OneToMany(mappedBy = "cluster")
+    @OneToMany(mappedBy = "cluster", cascade = CascadeType.PERSIST)
     private Set<ClusterNode> nodes = new HashSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -63,36 +64,15 @@ public class Cluster {
     @UpdateTimestamp
     private Date modifiedAt;
     
-    private static final ConcurrentHashMap<String, Cluster> cache = new ConcurrentHashMap<>();
-
-    private Cluster(String name) {
+    public Cluster(){}
+    
+    public Cluster(String name) {
         this.name = name;
-    }
-
-    public static Cluster getInstance(String name) {
-        Cluster cluster = cache.get(name);
-        if (cluster == null) {
-            cluster = new Cluster(name);
-            cache.putIfAbsent(name, cluster);
-            cluster = cache.get(name);
-        }
-        return cluster;
-    }
-
-    public static Map<String, Cluster> snapshot() {
-        return new HashMap<>(cache);
-    }
-
-    public static void clear(String name) {
-        cache.remove(name);
-    }
-
-    public void destroy() {
-        clear(this.name);
     }
 
     public void addNode(ClusterNode node) {
         this.nodes.add(node);
+        node.setCluster(this);
     }
 
     public ClusterStatus status() {
@@ -108,5 +88,14 @@ public class Cluster {
         } else {
             return ClusterStatus.SHUTDOWN;
         }
+    }
+
+    public ClusterNode getNode(String ip, int port) {
+        for (ClusterNode node:nodes) {
+            if(ip.equals(node.getIp()) && port == node.getPort()) {
+                return node;
+            }
+        }
+        return null;
     }
 }

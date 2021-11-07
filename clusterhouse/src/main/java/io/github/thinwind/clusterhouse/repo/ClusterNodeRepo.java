@@ -29,6 +29,5 @@ import io.github.thinwind.clusterhouse.entity.ClusterNode;
  */
 public interface ClusterNodeRepo extends JpaRepository<ClusterNode, Integer> {
     
-    ClusterNode findByName(String name);
-    
+    ClusterNode findByIpAndPort(String ip, int port);
 }
