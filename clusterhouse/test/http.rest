@@ -1,5 +1,5 @@
 POST /openapi/register/ HTTP/1.1
-Host: 127.0.0.1:11011
+Host: 127.0.0.1:7031
 Content-Type: application/json
 
 {
@@ -10,5 +10,5 @@ Content-Type: application/json
 
 ###
 GET /openapi/clusters HTTP/1.1
-Host: 127.0.0.1:11011
+Host: 127.0.0.1:7031
 

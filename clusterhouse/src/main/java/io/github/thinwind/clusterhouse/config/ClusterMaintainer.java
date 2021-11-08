@@ -15,8 +15,10 @@
  */
 package io.github.thinwind.clusterhouse.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import io.github.thinwind.clusterhouse.service.OpenApiService;
 
 /**
  *
@@ -29,9 +31,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClusterMaintainer {
     
-    // @Scheduled()
+    @Autowired
+    OpenApiService openApiService;
+    
+    @Scheduled(initialDelayString = "${ebnas.clustermaintainer.start}",fixedDelayString = "${ebnas.clustermaintainer.period}")
     public void maintain(){
-        
+        openApiService.maintain();
     }
     
 }

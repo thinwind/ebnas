@@ -44,7 +44,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class Cluster {
+public class Cluster implements Cloneable{
     
     @Id
     @GeneratedValue(generator = Consts.ID_GENERATOR)
@@ -97,5 +97,9 @@ public class Cluster {
             }
         }
         return null;
+    }
+    
+    public Cluster clone() throws CloneNotSupportedException {
+        return (Cluster) super.clone();
     }
 }
