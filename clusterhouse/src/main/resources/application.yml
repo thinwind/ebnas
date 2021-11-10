@@ -5,9 +5,9 @@ ebnas:
     period: 3000
   cluster: 
     # 从健康状态变为未知状态的时长
-    timeout-for-unknown: 30_000
+    timeout-for-unknown: 60_000
     # 从未知变为停止的时长
-    timeout-for-shutdown: 60_000
+    timeout-for-shutdown: 90_000
 
 server:
   port: 7031
