@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.nacos.client.naming.net;
+package com.alibaba.nacos.client.naming.clusterhouse;
 
-import com.alibaba.nacos.api.common.Constants;
-import com.alibaba.nacos.client.naming.utils.IoUtils;
-import com.alibaba.nacos.client.utils.StringUtils;
-import com.google.common.net.HttpHeaders;
-
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -27,42 +28,40 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
-import java.util.zip.GZIPInputStream;
-
 import static com.alibaba.nacos.client.utils.LogUtils.NAMING_LOGGER;
+import com.alibaba.nacos.api.common.Constants;
+import com.alibaba.nacos.client.naming.net.HttpResult;
+import com.alibaba.nacos.client.naming.utils.IoUtils;
+import com.alibaba.nacos.client.utils.StringUtils;
+import com.google.common.net.HttpHeaders;
 
 /**
- * @author nkorange
+ *
+ * http 请求工具
+ * 
+ * @author Shang Yehua <niceshang@outlook.com>
+ * @since 2021-11-08  15:11
+ *
  */
-public class HttpClient {
+public class ClusterHttpUtil {
 
-    public static final int TIME_OUT_MILLIS = Integer
-        .getInteger("com.alibaba.nacos.client.naming.ctimeout", 50000);
-    public static final int CON_TIME_OUT_MILLIS = Integer
-        .getInteger("com.alibaba.nacos.client.naming.ctimeout", 3000);
-    private static final boolean ENABLE_HTTPS = Boolean
-        .getBoolean("com.alibaba.nacos.client.naming.tls.enable");
+    public static final int TIME_OUT_MILLIS = 50_000;
+    public static final int CON_TIME_OUT_MILLIS = 3000;
 
     private static final String POST = "POST";
     private static final String PUT = "PUT";
+    private static final String GET = "GET";
 
-    static {
-        // limit max redirection
-        System.setProperty("http.maxRedirects", "5");
+    public static HttpResult httpGet(String url) {
+        return httpGet(url, null,null);
     }
-
-    public static String getPrefix() {
-        if (ENABLE_HTTPS) {
-            return "https://";
-        }
-
-        return "http://";
-
+    
+    public static HttpResult httpGet(String url, List<String> headers, Map<String, String> paramValues) {
+        return request(url, headers, paramValues, "UTF-8", GET);
     }
-
+    
     public static HttpResult httpGet(String url, List<String> headers, Map<String, String> paramValues, String encoding) {
-        return request(url, headers, paramValues, encoding, "GET");
+        return request(url, headers, paramValues, encoding, GET);
     }
 
     public static HttpResult request(String url, List<String> headers, Map<String, String> paramValues, String encoding, String method) {
@@ -78,15 +77,14 @@ public class HttpClient {
             conn.setReadTimeout(TIME_OUT_MILLIS);
             conn.setRequestMethod(method);
             conn.setDoOutput(true);
+            conn.connect();
             if (POST.equals(method) || PUT.equals(method)) {
-                // fix: apache http nio framework must set some content to request body
                 byte[] b = encodedContent.getBytes();
                 conn.setRequestProperty("Content-Length", String.valueOf(b.length));
                 conn.getOutputStream().write(b, 0, b.length);
                 conn.getOutputStream().flush();
                 conn.getOutputStream().close();
             }
-            conn.connect();
             NAMING_LOGGER.debug("Request from server: " + url);
             return getResult(conn);
         } catch (Exception e) {
@@ -166,7 +164,7 @@ public class HttpClient {
             }
         }
 
-        conn.addRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset="
+        conn.addRequestProperty("Content-Type", "application/json;charset="
             + encoding);
         conn.addRequestProperty("Accept-Charset", encoding);
     }
