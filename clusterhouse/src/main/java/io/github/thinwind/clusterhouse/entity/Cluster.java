@@ -52,7 +52,7 @@ public class Cluster implements Cloneable{
 
     private String name;
 
-    @OneToMany(mappedBy = "cluster", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL)
     private Set<ClusterNode> nodes = new HashSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
