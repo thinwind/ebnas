@@ -2,7 +2,7 @@ function detail(method) {
     let res = null;
     switch (method) {
         case 'GET':
-            res = [
+            res = 
                 {
                     "success": true,
                     "data": [
@@ -50,7 +50,7 @@ function detail(method) {
                     "traceId": "1636526219151@192.168.34.228",
                     "host": "192.168.34.228"
                   }
-            ];
+            ;
             break;
         default:
             res = null;

@@ -46,15 +46,13 @@ export default {
     getData() {
       axios.get("/openapi/clusters")
         .then((response) => {
-          response.data.forEach((item,i)=>{
+          response.data.data.forEach((item,j)=>{
             
-            item.data.forEach((d, j)=>{
               this.data1.push({});
-              this.data1[j].count=d.nodes.length;
-              this.data1[j].name=d.name;
-              this.data1[j].nodes=d.nodes;
+              this.data1[j].count=item.nodes.length;
+              this.data1[j].name=item.name;
+              this.data1[j].nodes=item.nodes;
               
-            });
             
           })
           // this.data1 = response.data;
