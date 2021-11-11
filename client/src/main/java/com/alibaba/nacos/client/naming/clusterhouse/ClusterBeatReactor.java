@@ -13,17 +13,12 @@
  */
 package com.alibaba.nacos.client.naming.clusterhouse;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.net.HttpURLConnection;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.client.naming.NamingServiceWrapper;
-import com.alibaba.nacos.client.naming.net.HttpResult;
 
 /**
  *
@@ -48,7 +43,7 @@ public class ClusterBeatReactor {
     private ScheduledExecutorService executorService;
 
     boolean stop = false;
-    
+
     public ClusterBeatReactor(String clusterHouseAddresses, String localClusterName,
             NamingServiceWrapper namingServiceWrapper) {
         this.clusterHouseAddresses = clusterHouseAddresses;
@@ -85,35 +80,14 @@ public class ClusterBeatReactor {
 
         @Override
         public void run() {
-            if(stop){
+            if (stop) {
                 return;
             }
-            HttpResult result = ClusterHttpUtil.httpGet(url);
-            if (HttpURLConnection.HTTP_OK == result.code) {
-                List<Cluster> clusters = JSON.parseArray(result.content, Cluster.class);
-                String localClusterAddr = null;
-                Set<String> remoteNamingAddrSet = new HashSet<>();
-                for (Cluster cluster : clusters) {
-                    if (localClusterName.equals(cluster.getName())) {
-                        localClusterAddr = mergeAddr(cluster);
-                    } else {
-                        remoteNamingAddrSet.add(mergeAddr(cluster));
-                    }
-                }
-                namingServiceWrapper.refresh(localClusterAddr, remoteNamingAddrSet);
-            }
+            Pair<Set<String>, Set<String>> pair =
+                    ClusterHttpUtil.getClusterhouses(localClusterName, url);
+            namingServiceWrapper.refresh(pair.left, pair.right);
             executorService.schedule(new ClusterBeatTask(url), DELAY, TimeUnit.MILLISECONDS);
         }
 
-    }
-
-    private String mergeAddr(Cluster cluster) {
-        StringBuilder builder = new StringBuilder();
-        for (ClusterNode node : cluster.getNodes()) {
-            builder.append(node.getIp()).append(":").append(node.getPort());
-            builder.append(",");
-        }
-        builder.setLength(builder.length() - 1);
-        return builder.toString();
     }
 }

@@ -34,7 +34,7 @@ public class ClusterMaintainer {
     @Autowired
     OpenApiService openApiService;
     
-    @Scheduled(initialDelayString = "${ebnas.clustermaintainer.start}",fixedDelayString = "${ebnas.clustermaintainer.period}")
+    // @Scheduled(initialDelayString = "${ebnas.clustermaintainer.start}",fixedDelayString = "${ebnas.clustermaintainer.period}")
     public void maintain(){
         openApiService.maintain();
     }

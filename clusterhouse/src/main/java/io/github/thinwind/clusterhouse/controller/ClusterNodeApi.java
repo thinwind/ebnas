@@ -37,10 +37,10 @@ import io.github.thinwind.clusterhouse.service.OpenApiService;
 @RestController
 @RequestMapping("/openapi")
 public class ClusterNodeApi {
-    
+
     @Autowired
     private OpenApiService openApiService;
-    
+
     @Autowired
     private NotifyService notifyService;
 
@@ -51,12 +51,12 @@ public class ClusterNodeApi {
     }
 
     @GetMapping("/clusters")
-    public Object snapshot(@RequestParam(required = false,defaultValue = "-1") int delay) {
-        if(delay == 0){
+    public Object snapshot(@RequestParam(required = false, defaultValue = "-1") int delay) {
+        if (delay == 0) {
             return openApiService.allHealthyClusters();
         }
-        if(delay <0){
-            delay = 29*1000+500;
+        if (delay < 0) {
+            delay = 29 * 1000 + 500;
         }
         CountDownLatch lock = notifyService.getLock();
         try {

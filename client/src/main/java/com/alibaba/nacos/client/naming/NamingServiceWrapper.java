@@ -13,15 +13,10 @@
  */
 package com.alibaba.nacos.client.naming;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.net.HttpURLConnection;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.listener.EventListener;
@@ -29,11 +24,9 @@ import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacos.api.naming.pojo.ListView;
 import com.alibaba.nacos.api.naming.pojo.ServiceInfo;
 import com.alibaba.nacos.api.selector.AbstractSelector;
-import com.alibaba.nacos.client.naming.clusterhouse.Cluster;
 import com.alibaba.nacos.client.naming.clusterhouse.ClusterBeatReactor;
 import com.alibaba.nacos.client.naming.clusterhouse.ClusterHttpUtil;
-import com.alibaba.nacos.client.naming.clusterhouse.ClusterNode;
-import com.alibaba.nacos.client.naming.net.HttpResult;
+import com.alibaba.nacos.client.naming.clusterhouse.Pair;
 
 /**
  *
@@ -47,97 +40,75 @@ public class NamingServiceWrapper implements NamingService {
 
     private MultiClusterNamingService namingService;
 
-    private String localNamingAddr;
+    private Set<String> localNamingAddrSet = new HashSet<>();
 
     private String localClusterName;
 
     private String clusterHouseAddresses;
 
-    private Set<String> remoteNamingAddrSet;
+    private boolean refreshLocalNamingAddr = false;
+
+    private Set<String> remoteNamingAddrSet = new HashSet<>();;
 
     private final static String CLUSTER_LIST_URI = "/openapi/clusters?delay=0";
-    
+
     ClusterBeatReactor beatReactor;
 
-    public NamingServiceWrapper(String localClusterName, String localNamingAddr,
+    public NamingServiceWrapper(String localClusterName, String localNamingAddrs,
             String clusterHouseAddresses) {
-        this.localNamingAddr = localNamingAddr;
         this.localClusterName = localClusterName;
         this.clusterHouseAddresses = clusterHouseAddresses;
-        remoteNamingAddrSet = remoteNamingAddrSet();
+        refreshLocalNamingAddr = (localNamingAddrs == null || localNamingAddrs.trim().isEmpty());
+        if (!refreshLocalNamingAddr) {
+            for (String addr : localNamingAddrs.split(",")) {
+                localNamingAddrSet.add(addr);
+            }
+        }
 
-        namingService = new MultiClusterNamingService(this.localNamingAddr,
+        refreshNamingAddrs();
+
+        if (refreshLocalNamingAddr) {
+            localNamingAddrs = localNamingAddrSet.stream().collect(Collectors.joining(","));
+        }
+
+        namingService = new MultiClusterNamingService(localNamingAddrs,
                 remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
-                
+
         // heartbeat
         beatReactor = new ClusterBeatReactor(clusterHouseAddresses, localClusterName, this);
     }
 
-    Set<String> remoteNamingAddrSet() {
+    private void refreshNamingAddrs() {
         if (clusterHouseAddresses == null || clusterHouseAddresses.isEmpty()) {
-            return Collections.emptySet();
+            return;
         }
-        String clusterHouses[] = clusterHouseAddresses.split(",");
-        Map<String, Set<String>> cache = new HashMap<>();
-        Set<String> localClusters = null;
-        if (localNamingAddr == null || localNamingAddr.trim().isEmpty()) {
-            localClusters = new HashSet<>();
-        }
-        for (String clusterHouse : clusterHouses) {
-            try {
-                HttpResult result =
-                        ClusterHttpUtil.httpGet("http://" + clusterHouse + CLUSTER_LIST_URI);
-                if (HttpURLConnection.HTTP_OK == result.code) {
-                    List<Cluster> clusters = JSON.parseArray(result.content, Cluster.class);
-                    for (Cluster cluster : clusters) {
-                        String clusterName = cluster.getName();
-                        Set<String> remoteNamingAddrSet = cache.get(clusterName);
-                        if (remoteNamingAddrSet == null) {
-                            remoteNamingAddrSet = new HashSet<>();
-                            cache.put(clusterName, remoteNamingAddrSet);
-                        }
-                        if (localClusterName.equals(clusterName)) {
-                            if (localClusters !=null) {
-                                for (ClusterNode node : cluster.getNodes()) {
-                                    localClusters.add(node.getIp() + ":" + node.getPort());
-                                }
-                            }
-                        } else {
-                            for (ClusterNode node : cluster.getNodes()) {
-                                remoteNamingAddrSet.add(node.getIp() + ":" + node.getPort());
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                //Just ignore
-                e.printStackTrace();
-            }
 
+        String clusterHouses[] = clusterHouseAddresses.split(",");
+        for (String clusterHouse : clusterHouses) {
+            String url = "http://" + clusterHouse + CLUSTER_LIST_URI;
+            Pair<Set<String>, Set<String>> pair =
+                    ClusterHttpUtil.getClusterhouses(localClusterName, url);
+            if (refreshLocalNamingAddr) {
+                localNamingAddrSet.addAll(pair.left);
+            }
+            remoteNamingAddrSet.addAll(pair.right);
         }
-        Set<String> result = new HashSet<>();
-        cache.values().forEach(s -> {
-            result.add(s.stream().collect(Collectors.joining(",")));
-        });
-        if (localClusters !=null) {
-            localNamingAddr = localClusters.stream().collect(Collectors.joining(","));
-        }
-        return result;
     }
 
-    public NamingServiceWrapper(String localNamingAddr, Set<String> remoteNamingAddrSet) {
-        this.localNamingAddr = localNamingAddr;
-        this.remoteNamingAddrSet = remoteNamingAddrSet;
-        namingService = new MultiClusterNamingService(localNamingAddr,
+    public NamingServiceWrapper(String localNamingAddrs, Set<String> remoteNamingAddrSet) {
+        namingService = new MultiClusterNamingService(localNamingAddrs,
                 remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
     }
 
-    public synchronized void refresh(String localNamingAddr, Set<String> remoteNamingAddrSet) {
+    public synchronized void refresh(Set<String> localNamingAddr, Set<String> remoteNamingAddrSet) {
         boolean changed = false;
-        if (localNamingAddr != null && this.localNamingAddr.equals(localNamingAddr)) {
-            this.localNamingAddr = localNamingAddr;
-            changed = true;
+        if (refreshLocalNamingAddr) {
+            if (!this.localNamingAddrSet.containsAll(localNamingAddr)) {
+                this.localNamingAddrSet.addAll(localNamingAddr);
+                changed=true;
+            }
         }
+
         if (!this.remoteNamingAddrSet.containsAll(remoteNamingAddrSet)) {
             this.remoteNamingAddrSet.addAll(remoteNamingAddrSet);
             changed = true;
@@ -145,7 +116,8 @@ public class NamingServiceWrapper implements NamingService {
         //判断是否有变动
         if (changed) {
             namingService.shutdown();
-            namingService = new MultiClusterNamingService(localNamingAddr,
+            String localNamingAddrs= localNamingAddrSet.stream().collect(Collectors.joining(","));
+            namingService = new MultiClusterNamingService(localNamingAddrs,
                     remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
         }
     }
