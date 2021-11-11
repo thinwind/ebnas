@@ -16,7 +16,7 @@
 package io.github.thinwind.clusterhouse.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.transaction.annotation.Transactional;
 import io.github.thinwind.clusterhouse.entity.Cluster;
 
 /**
@@ -27,6 +27,7 @@ import io.github.thinwind.clusterhouse.entity.Cluster;
  * @since 2021-11-06  16:21
  *
  */
+@Transactional(rollbackFor = Exception.class)
 public interface ClusterRepo extends JpaRepository<Cluster, Integer> {
     
     Cluster findByName(String name);

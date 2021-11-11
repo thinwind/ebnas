@@ -36,7 +36,6 @@ import io.github.thinwind.clusterhouse.repo.ClusterRepo;
  *
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class OpenApiServiceImpl implements OpenApiService {
 
     @Autowired
@@ -44,6 +43,9 @@ public class OpenApiServiceImpl implements OpenApiService {
 
     @Autowired
     ClusterNodeRepo clusterNodeRepo;
+    
+    @Autowired
+    NotifyService notifyService;
 
     @Value("${ebnas.cluster.timeout-for-unknown}")
     private int timeoutForUnknown;
@@ -53,9 +55,11 @@ public class OpenApiServiceImpl implements OpenApiService {
 
     @Override
     public void refresh(NodeDto node) {
+        boolean changed = false;
         Cluster cluster = clusterRepo.findByName(node.getClusterName());
         if (cluster == null) {
             cluster = new Cluster(node.getClusterName());
+            changed = true;
         }
         ClusterNode clusterNode = cluster.getNode(node.getIp(), node.getPort());
         if (clusterNode == null) {
@@ -63,35 +67,48 @@ public class OpenApiServiceImpl implements OpenApiService {
             clusterNode.setIp(node.getIp());
             clusterNode.setPort(node.getPort());
             cluster.addNode(clusterNode);
+            changed = true;
         } else {
-            clusterNode.setStatus(NodeStatus.HEALTHY);
+            if(clusterNode.getStatus() != NodeStatus.HEALTHY){
+                clusterNode.setStatus(NodeStatus.HEALTHY);
+                changed = true;
+            }
             clusterNode.setModifiedAt(new Date());
         }
         clusterRepo.saveAndFlush(cluster);
+        if(changed){
+            notifyService.releaseLock();
+        }
     }
 
     @Override
     public void maintain() {
         List<Cluster> clusters = clusterRepo.findAll();
         long current = System.currentTimeMillis();
+        boolean changed = false;
         for (Cluster cluster : clusters) {
             if (cluster.getNodes().isEmpty()) {
-                return;
+                continue;
             }
             for (ClusterNode node : cluster.getNodes()) {
                 if (node.getStatus() == NodeStatus.HEALTHY) {
                     if (current - node.getModifiedAt().getTime() >= timeoutForUnknown) {
                         node.setStatus(NodeStatus.UNKNOWN);
+                        changed = true;
                     }
                 } else if (node.getStatus() == NodeStatus.UNKNOWN) {
                     if (current - node.getModifiedAt().getTime() >= timeoutForShutdown) {
                         node.setStatus(NodeStatus.SHUTDOWN);
+                        changed = true;
                     }
                 }
             }
             clusterRepo.save(cluster);
         }
-
+        
+        if(changed){
+            notifyService.releaseLock();
+        }
     }
 
     @Override

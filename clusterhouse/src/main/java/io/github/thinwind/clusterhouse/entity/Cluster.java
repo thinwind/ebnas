@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -52,7 +53,7 @@ public class Cluster implements Cloneable{
 
     private String name;
 
-    @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ClusterNode> nodes = new HashSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)

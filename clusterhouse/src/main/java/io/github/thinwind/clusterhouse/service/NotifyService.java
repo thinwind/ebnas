@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.thinwind.clusterhouse.repo;
+package io.github.thinwind.clusterhouse.service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
-import io.github.thinwind.clusterhouse.entity.ClusterNode;
+import java.util.concurrent.CountDownLatch;
 
 /**
  *
- * TODO ClusterNodeRepo说明
+ * TODO NotifyService说明
  *
  * @author Shang Yehua <niceshang@outlook.com>
- * @since 2021-11-06  16:33
+ * @since 2021-11-11  15:48
  *
  */
-@Transactional(rollbackFor = Exception.class)
-public interface ClusterNodeRepo extends JpaRepository<ClusterNode, Integer> {
+public interface NotifyService {
     
-    ClusterNode findByIpAndPort(String ip, int port);
+    CountDownLatch getLock();
+    
+    void releaseLock();
 }

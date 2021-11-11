@@ -13,14 +13,17 @@
  */
 package io.github.thinwind.clusterhouse.controller;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import io.github.thinwind.clusterhouse.dto.NodeDto;
+import io.github.thinwind.clusterhouse.service.NotifyService;
 import io.github.thinwind.clusterhouse.service.OpenApiService;
 
 /**
@@ -37,6 +40,9 @@ public class ClusterNodeApi {
     
     @Autowired
     private OpenApiService openApiService;
+    
+    @Autowired
+    private NotifyService notifyService;
 
     @PostMapping("/register/")
     public Object register(@RequestBody NodeDto node) {
@@ -45,7 +51,20 @@ public class ClusterNodeApi {
     }
 
     @GetMapping("/clusters")
-    public Object snapshot() {
+    public Object snapshot(@RequestParam(required = false,defaultValue = "-1") int delay) {
+        if(delay == 0){
+            return openApiService.allHealthyClusters();
+        }
+        if(delay <0){
+            delay = 29*1000+500;
+        }
+        CountDownLatch lock = notifyService.getLock();
+        try {
+            lock.await(delay, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            // Just ignore
+            e.printStackTrace();
+        }
         return openApiService.allHealthyClusters();
     }
 }
