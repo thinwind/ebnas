@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getData() {
-      axios.get("/api/dashboard/detail")
+      axios.get("/openapi/clusters")
         .then((response) => {
           response.data.forEach((item,i)=>{
             

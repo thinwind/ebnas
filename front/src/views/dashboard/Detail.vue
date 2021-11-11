@@ -23,7 +23,7 @@ export default {
   methods: {
     getData() {
       axios
-        .get("/api/dashboard/detail", { params: { ID: 12345 } })
+        .get("/openapi/clusters", { params: { delay: 0 } })
         .then((response) => {
           this.formData = response.data;
         });
