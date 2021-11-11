@@ -100,6 +100,8 @@ public class Cluster implements Cloneable{
     }
     
     public Cluster clone() throws CloneNotSupportedException {
-        return (Cluster) super.clone();
+        Cluster shadow = (Cluster) super.clone();
+        shadow.nodes = new HashSet(this.nodes);
+        return shadow;
     }
 }
