@@ -45,7 +45,7 @@ import com.alibaba.nacos.client.naming.net.HttpResult;
  */
 public class NamingServiceWrapper implements NamingService {
 
-    private NamingService namingService;
+    private MultiClusterNamingService namingService;
 
     private String localNamingAddr;
 
@@ -144,7 +144,7 @@ public class NamingServiceWrapper implements NamingService {
         }
         //判断是否有变动
         if (changed) {
-            //TODO stop current namingService
+            namingService.shutdown();
             namingService = new MultiClusterNamingService(localNamingAddr,
                     remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
         }

@@ -53,6 +53,18 @@ public class BeatReactor {
             }
         });
     }
+    
+    public void shutdown() {
+        for (BeatInfo beatInfo : dom2Beat.values()) {
+            beatInfo.setStopped(true);
+        }
+        try {
+            executorService.shutdownNow();
+        }catch(Exception e) {
+            //Just ignore
+            e.printStackTrace();
+        }
+    }
 
     public void addBeatInfo(String serviceName, BeatInfo beatInfo) {
         NAMING_LOGGER.info("[BEAT] adding beat: {} to beat map.", beatInfo);
