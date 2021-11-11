@@ -90,6 +90,15 @@ public class FailoverReactor {
             }
         }, 10000L, TimeUnit.MILLISECONDS);
     }
+    
+    public void shutdown() {
+        try{
+            executorService.shutdownNow();
+        }catch(Exception e) {
+            //Just ignore
+            e.printStackTrace();
+        }
+    }
 
     public Date addDay(Date date, int num) {
         Calendar startDT = Calendar.getInstance();

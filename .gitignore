@@ -13,3 +13,4 @@ node_modules
 test/derby.log
 derby.log
 .init-env.sh
+front/dist/

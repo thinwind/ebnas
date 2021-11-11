@@ -88,6 +88,17 @@ public class HostReactor {
         this.failoverReactor = new FailoverReactor(this, cacheDir);
         this.pushReceiver = new PushReceiver(this);
     }
+    
+    public void shutdown(){
+        try{
+            executor.shutdownNow();
+        }catch(Exception e){
+            //Just ignore
+            e.printStackTrace();
+        }
+        failoverReactor.shutdown();
+        pushReceiver.shutdown();
+    }
 
     public Map<String, ServiceInfo> getServiceInfoMap() {
         return serviceInfoMap;

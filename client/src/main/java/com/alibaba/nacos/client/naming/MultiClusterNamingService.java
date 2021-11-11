@@ -49,6 +49,13 @@ public class MultiClusterNamingService implements NamingService {
             otherDatahouses = new NacosNamingService[0];
         }
     }
+    
+    public void shutdown() {
+        localNamingService.shutdown();
+        for (NacosNamingService other: otherDatahouses){
+            other.shutdown();
+        }
+    }
 
     @Override
     public void registerInstance(String serviceName, String ip, int port) throws NacosException {

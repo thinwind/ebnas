@@ -15,15 +15,15 @@
  */
 package com.alibaba.nacos.test.naming;
 
-import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.alibaba.nacos.client.naming.net.HttpClient;
-import org.apache.http.HttpStatus;
-import org.junit.Assert;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.http.HttpStatus;
+import com.alibaba.nacos.api.naming.pojo.Instance;
+import com.alibaba.nacos.client.naming.net.HttpClient;
+import com.alibaba.nacos.client.naming.net.HttpResult;
+import org.junit.Assert;
 
 /**
  * @author nkorange
@@ -175,7 +175,7 @@ public class NamingBase {
         List<String> headers = new ArrayList<String>();
         headers.add("User-Agent");
         headers.add("Nacos-Server");
-        HttpClient.HttpResult result =
+        HttpResult result =
             HttpClient.request(url, headers, new HashMap<String, String>(), "UTF-8", "PUT");
 
         Assert.assertEquals(HttpStatus.SC_OK, result.code);
