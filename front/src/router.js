@@ -8,18 +8,15 @@ const routers = [
         path: '/',
         component: BasicLayout,
         children: [
+            
             {
                 path: '/',
-                redirect: '/form/basic',
-            },
-            {
-                path: '/form',
                 name: 'from',
                 meta: { title: "集群管理", icon: "ios-people"},
                 component: RouteView,
                 children: [
                     {
-                        path: '/form/basic',
+                        path: '/',
                         name: 'basic',
                         meta: { title: "集群节点"},
                         component: (resolve) => require(['./views/form/Detail.vue'], resolve)
