@@ -30,6 +30,7 @@ import com.alibaba.nacos.api.naming.pojo.ListView;
 import com.alibaba.nacos.api.naming.pojo.ServiceInfo;
 import com.alibaba.nacos.api.selector.AbstractSelector;
 import com.alibaba.nacos.client.naming.clusterhouse.Cluster;
+import com.alibaba.nacos.client.naming.clusterhouse.ClusterBeatReactor;
 import com.alibaba.nacos.client.naming.clusterhouse.ClusterHttpUtil;
 import com.alibaba.nacos.client.naming.clusterhouse.ClusterNode;
 import com.alibaba.nacos.client.naming.net.HttpResult;
@@ -55,6 +56,8 @@ public class NamingServiceWrapper implements NamingService {
     private Set<String> remoteNamingAddrSet;
 
     private final static String CLUSTER_LIST_URI = "/openapi/clusters?delay=0";
+    
+    ClusterBeatReactor beatReactor;
 
     public NamingServiceWrapper(String localClusterName, String localNamingAddr,
             String clusterHouseAddresses) {
@@ -62,9 +65,12 @@ public class NamingServiceWrapper implements NamingService {
         this.localClusterName = localClusterName;
         this.clusterHouseAddresses = clusterHouseAddresses;
         remoteNamingAddrSet = remoteNamingAddrSet();
-        
-        namingService = new MultiClusterNamingService(localNamingAddr,
+
+        namingService = new MultiClusterNamingService(this.localNamingAddr,
                 remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
+                
+        // heartbeat
+        beatReactor = new ClusterBeatReactor(clusterHouseAddresses, localClusterName, this);
     }
 
     Set<String> remoteNamingAddrSet() {
@@ -73,6 +79,10 @@ public class NamingServiceWrapper implements NamingService {
         }
         String clusterHouses[] = clusterHouseAddresses.split(",");
         Map<String, Set<String>> cache = new HashMap<>();
+        Set<String> localClusters = null;
+        if (localNamingAddr == null || localNamingAddr.trim().isEmpty()) {
+            localClusters = new HashSet<>();
+        }
         for (String clusterHouse : clusterHouses) {
             try {
                 HttpResult result =
@@ -86,7 +96,13 @@ public class NamingServiceWrapper implements NamingService {
                             remoteNamingAddrSet = new HashSet<>();
                             cache.put(clusterName, remoteNamingAddrSet);
                         }
-                        if (!localClusterName.equals(clusterName)) {
+                        if (localClusterName.equals(clusterName)) {
+                            if (localClusters !=null) {
+                                for (ClusterNode node : cluster.getNodes()) {
+                                    localClusters.add(node.getIp() + ":" + node.getPort());
+                                }
+                            }
+                        } else {
                             for (ClusterNode node : cluster.getNodes()) {
                                 remoteNamingAddrSet.add(node.getIp() + ":" + node.getPort());
                             }
@@ -100,9 +116,12 @@ public class NamingServiceWrapper implements NamingService {
 
         }
         Set<String> result = new HashSet<>();
-        cache.values().forEach(s->{
+        cache.values().forEach(s -> {
             result.add(s.stream().collect(Collectors.joining(",")));
         });
+        if (localClusters !=null) {
+            localNamingAddr = localClusters.stream().collect(Collectors.joining(","));
+        }
         return result;
     }
 

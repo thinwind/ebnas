@@ -47,6 +47,8 @@ public class ClusterBeatReactor {
 
     private ScheduledExecutorService executorService;
 
+    boolean stop = false;
+    
     public ClusterBeatReactor(String clusterHouseAddresses, String localClusterName,
             NamingServiceWrapper namingServiceWrapper) {
         this.clusterHouseAddresses = clusterHouseAddresses;
@@ -83,6 +85,9 @@ public class ClusterBeatReactor {
 
         @Override
         public void run() {
+            if(stop){
+                return;
+            }
             HttpResult result = ClusterHttpUtil.httpGet(url);
             if (HttpURLConnection.HTTP_OK == result.code) {
                 List<Cluster> clusters = JSON.parseArray(result.content, Cluster.class);
