@@ -16,6 +16,7 @@
 package io.github.thinwind.clusterhouse.service;
 
 import java.util.concurrent.CountDownLatch;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -27,7 +28,9 @@ import java.util.concurrent.CountDownLatch;
  */
 public interface NotifyService {
     
-    CountDownLatch getLock();
+    Pair<Long, CountDownLatch> getLock();
+    
+    void releaseLock(Long id);
     
     void releaseLock();
 }

@@ -15,6 +15,7 @@ package io.github.thinwind.clusterhouse.controller;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,12 +59,14 @@ public class ClusterNodeApi {
         if (delay < 0) {
             delay = 29 * 1000 + 500;
         }
-        CountDownLatch lock = notifyService.getLock();
+        Pair<Long, CountDownLatch> lockPair = notifyService.getLock();
         try {
-            lock.await(delay, TimeUnit.MILLISECONDS);
+            lockPair.getRight().await(delay, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             // Just ignore
             e.printStackTrace();
+        }finally{
+            notifyService.releaseLock(lockPair.getLeft());
         }
         return openApiService.allHealthyClusters();
     }

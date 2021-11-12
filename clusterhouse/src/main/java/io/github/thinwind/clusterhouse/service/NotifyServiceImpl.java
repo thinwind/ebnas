@@ -15,9 +15,11 @@
  */
 package io.github.thinwind.clusterhouse.service;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,20 +33,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotifyServiceImpl implements NotifyService {
 
-    private List<CountDownLatch> locks = new Vector<>();
+    // private List<CountDownLatch> locks = new Vector<>();
+    
+    private ConcurrentMap<Long, CountDownLatch> locks = new ConcurrentHashMap<>();
+    
+    private final AtomicLong CURSOR = new AtomicLong(0);
     
     @Override
-    public CountDownLatch getLock() {
+    public Pair<Long, CountDownLatch> getLock() {
+        Long current = CURSOR.getAndIncrement();
         CountDownLatch lock = new CountDownLatch(1);
-        locks.add(lock);
-        return lock;
+        locks.put(current, lock);
+        return Pair.of(current, lock);
     }
 
     @Override
     public void releaseLock() {
-        List<CountDownLatch> target = locks;
-        locks = new Vector<>();
-        for (CountDownLatch lock : target){
+        ConcurrentMap<Long, CountDownLatch> target = locks;
+        locks = new ConcurrentHashMap<>();
+        for (CountDownLatch lock : target.values()) {
+            lock.countDown();
+        }
+    }
+
+    @Override
+    public void releaseLock(Long id) {
+        CountDownLatch lock = locks.remove(id);
+        if (lock != null) {
             lock.countDown();
         }
     }
