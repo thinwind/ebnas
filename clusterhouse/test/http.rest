@@ -3,9 +3,9 @@ Host: 127.0.0.1:7031
 Content-Type: application/json
 
 {
-    "clusterName":"demo1",
+    "clusterName":"cluster1",
     "ip":"127.0.0.1",
-    "port":8088
+    "port":8848
 }
 
 ###
@@ -14,9 +14,9 @@ Host: 127.0.0.1:7031
 Content-Type: application/json
 
 {
-    "clusterName":"demo1",
-    "ip":"127.0.0.2",
-    "port":8088
+    "clusterName":"cluster2",
+    "ip":"127.0.0.1",
+    "port":8849
 }
 
 
