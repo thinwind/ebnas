@@ -13,7 +13,6 @@
  */
 package com.alibaba.nacos.naming.clusterhouse;
 
-import java.util.concurrent.TimeUnit;
 import java.nio.charset.Charset;
 import javax.annotation.PostConstruct;
 import com.alibaba.nacos.core.utils.InetUtils;
@@ -72,32 +71,5 @@ public class HeartBeat {
             }
         }
 
-    }
-
-    public static void main(String[] args) {
-        String clusterName = "demo1";
-        String portStr = "8848";
-        String ip = InetUtils.getSelfIp();
-        
-        String template =
-                "{\"clusterName\":\"{{clustername}}\",\"ip\":\"{{ip}}\",\"port\":{{port}}}";
-        template = template.replace("{{clustername}}", clusterName);
-        template = template.replace("{{ip}}", ip);
-        template = template.replace("{{port}}", portStr);
-        byte[] data = template.getBytes(Charset.forName("UTF-8"));
-        for (int i = 0; i < data.length; i++) {
-            try {
-                HttpClient.asyncHttpPostLarge("http://127.0.0.1:7031/openapi/register/", null, data, null);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            try {
-                TimeUnit.SECONDS.sleep(10);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
     }
 }
