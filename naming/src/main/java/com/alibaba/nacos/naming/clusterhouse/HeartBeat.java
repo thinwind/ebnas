@@ -41,9 +41,12 @@ public class HeartBeat {
     String[] urls;
 
     byte[] data;
+    
+    @Value("${server.port}") 
+    int port;
 
     @PostConstruct
-    public void init(@Value("${server.port}") int port) {
+    public void init() {
         String[] chaddrs = clusterhouseAddresses.split(",");
         urls = new String[chaddrs.length];
         for (int i = 0; i < urls.length; i++) {
@@ -64,6 +67,7 @@ public class HeartBeat {
     public void heartbeat() {
         for (String url : urls) {
             try {
+                System.out.println("HeartBeat to "+url);
                 HttpClient.asyncHttpPostLarge(url, null, data, null);
             } catch (Exception e) {
                 // Just ignore
