@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getData() {
-      axios.get("/openapi/clusters")
+      axios.get("/openapi/clusters", { params: { delay: 0 } })
         .then((response) => {
           response.data.data.forEach((item,j)=>{
             

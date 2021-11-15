@@ -95,6 +95,14 @@ public class NamingServiceWrapper implements NamingService {
         }
     }
 
+    public NamingServiceWrapper(Set<String> localNamingAddrSet, Set<String> remoteNamingAddrSet){
+        if(localNamingAddrSet != null && !localNamingAddrSet.isEmpty()){
+            String localNamingAddrs = localNamingAddrSet.stream().collect(Collectors.joining(","));
+            namingService = new MultiClusterNamingService(localNamingAddrs,
+                remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
+        }
+    }
+    
     public NamingServiceWrapper(String localNamingAddrs, Set<String> remoteNamingAddrSet) {
         namingService = new MultiClusterNamingService(localNamingAddrs,
                 remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
@@ -115,7 +123,9 @@ public class NamingServiceWrapper implements NamingService {
         }
         //判断是否有变动
         if (changed) {
-            namingService.shutdown();
+            if (namingService != null) {
+                namingService.shutdown();
+            }
             String localNamingAddrs= localNamingAddrSet.stream().collect(Collectors.joining(","));
             namingService = new MultiClusterNamingService(localNamingAddrs,
                     remoteNamingAddrSet.toArray(new String[remoteNamingAddrSet.size()]));
@@ -409,6 +419,22 @@ public class NamingServiceWrapper implements NamingService {
     @Override
     public String getServerStatus() {
         return namingService.getServerStatus();
+    }
+
+    public boolean isRefreshLocalNamingAddr() {
+        return refreshLocalNamingAddr;
+    }
+
+    public void setRefreshLocalNamingAddr(boolean refreshLocalNamingAddr) {
+        this.refreshLocalNamingAddr = refreshLocalNamingAddr;
+    }
+
+    public String getLocalClusterName() {
+        return localClusterName;
+    }
+
+    public void setLocalClusterName(String localClusterName) {
+        this.localClusterName = localClusterName;
     }
 
 }

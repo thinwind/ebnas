@@ -31,6 +31,9 @@ public class TestController {
 
     @Autowired
     TestService testService;
+    
+    @Autowired
+    ProxyService proxyService;
 
     @GetMapping("/get-provider2")
     public Object getProvider2() throws Exception {
@@ -45,4 +48,16 @@ public class TestController {
         return testService.postString(url);
     }
 
+    @PostMapping("/post-proxy")
+    public Object postProvider1Proxy() throws Exception {
+        String url = "http://provider1:7031/proxy/post-mock";
+        return proxyService.postString(url);
+    }
+    
+    @GetMapping("/get-proxy")
+    public Object getProvider2Proxy() throws Exception {
+        String url = "http://provider2:7031/get-mock";
+        return proxyService.getString(url);
+    }
+    
 }

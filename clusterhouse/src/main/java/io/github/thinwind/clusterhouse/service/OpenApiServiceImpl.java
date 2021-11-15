@@ -2,7 +2,10 @@ package io.github.thinwind.clusterhouse.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import com.alibaba.nacos.client.naming.NamingServiceWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,9 +46,12 @@ public class OpenApiServiceImpl implements OpenApiService {
 
     @Autowired
     ClusterNodeRepo clusterNodeRepo;
-    
+
     @Autowired
     NotifyService notifyService;
+
+    @Autowired
+    NamingServiceWrapper namingServiceWrapper;
 
     @Value("${ebnas.cluster.timeout-for-unknown}")
     private int timeoutForUnknown;
@@ -69,16 +75,42 @@ public class OpenApiServiceImpl implements OpenApiService {
             cluster.addNode(clusterNode);
             changed = true;
         } else {
-            if(clusterNode.getStatus() != NodeStatus.HEALTHY){
+            if (clusterNode.getStatus() != NodeStatus.HEALTHY) {
                 clusterNode.setStatus(NodeStatus.HEALTHY);
                 changed = true;
             }
             clusterNode.setModifiedAt(new Date());
         }
         clusterRepo.saveAndFlush(cluster);
-        if(changed){
+        if (changed) {
             notifyService.releaseLock();
+            //刷新namingservice
+            refreshNamingService();
         }
+    }
+
+    private void refreshNamingService() {
+        List<Cluster> clusters = clusterRepo.findAll();
+        String localClusterName = namingServiceWrapper.getLocalClusterName();
+        if (localClusterName == null) {
+            localClusterName = clusters.get(0).getName();
+            namingServiceWrapper.setLocalClusterName(localClusterName);
+        }
+
+        Set<String> localClusters = new HashSet<>();
+        Set<String> remoteClusters = new HashSet<>();
+        for (Cluster cluster : clusters) {
+            for (ClusterNode node : cluster.getNodes()) {
+                if (node.getStatus() != NodeStatus.SHUTDOWN) {
+                    if (localClusterName.equals(cluster.getName())) {
+                        localClusters.add(node.getIp() + ":" + node.getPort());
+                    } else {
+                        remoteClusters.add(node.getIp() + ":" + node.getPort());
+                    }
+                }
+            }
+        }
+        namingServiceWrapper.refresh(localClusters, remoteClusters);
     }
 
     @Override
@@ -105,8 +137,8 @@ public class OpenApiServiceImpl implements OpenApiService {
             }
             clusterRepo.save(cluster);
         }
-        
-        if(changed){
+
+        if (changed) {
             notifyService.releaseLock();
         }
     }
@@ -127,7 +159,7 @@ public class OpenApiServiceImpl implements OpenApiService {
             for (ClusterNode node : cluster.getNodes()) {
                 if (node.getStatus() == NodeStatus.SHUTDOWN) {
                     shadow.getNodes().remove(node);
-                }else{
+                } else {
                     //避免序列号过程循环嵌套
                     node.setCluster(null);
                 }
