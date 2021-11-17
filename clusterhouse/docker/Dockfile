@@ -12,9 +12,7 @@ WORKDIR $BASE_DIR
 # set startup log dir
 RUN mkdir -p logs \
 	&& cd logs \
-	&& touch start.out \
-	&& ln -sf /dev/stdout start.out \
-	&& ln -sf /dev/stderr start.out
+	&& touch start.out
     
 RUN chmod a+x startup.sh
 
