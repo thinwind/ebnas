@@ -16,6 +16,7 @@ server:
     
 ebnas:
   server-addr: 192.168.34.228:8848
+  # local-ip: 192.168.34.228
     
 # spring:
 #   datasource:

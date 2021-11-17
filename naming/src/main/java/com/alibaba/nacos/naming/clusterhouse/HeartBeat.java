@@ -67,6 +67,7 @@ public class HeartBeat {
     public void heartbeat() {
         for (String url : urls) {
             try {
+                System.out.println("heartbeat to " + url);
                 HttpClient.asyncHttpPostLarge(url, null, data, null);
             } catch (Exception e) {
                 // Just ignore

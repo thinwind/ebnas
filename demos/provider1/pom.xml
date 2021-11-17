@@ -83,6 +83,13 @@
                 <configuration>
                     <mainClass>io.github.thinwind.ebnas.provider1.DemoApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                             <goal>repackage</goal>
+                         </goals>
+                      </execution>
+                </executions>      
             </plugin>
         </plugins>
     </build>

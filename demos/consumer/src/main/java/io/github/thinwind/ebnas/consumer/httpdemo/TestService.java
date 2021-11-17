@@ -39,19 +39,28 @@ public class TestService {
     public String getString(String url) throws URISyntaxException, NacosException {
         URI uri = new URI(url);
         String serviceName = uri.getHost();
-
-        Instance provider = namingService.selectOneHealthyInstance(serviceName);
+        Instance provider =null;
+        try {
+            provider = namingService.selectOneHealthyInstance(serviceName);
+        } catch (Exception e) {
+            return serviceName+" 服务不存在或者无可用实例";
+        }
         String hostName = provider.getIp();
         int port = provider.getPort();
         String targetUri = uri.getRawPath();
         return AsyncHttpUtil.get(hostName, port, targetUri);
     }
-    
-    public String postString(String url) throws URISyntaxException, NacosException, InterruptedException, ExecutionException {
+
+    public String postString(String url)
+            throws URISyntaxException, NacosException, InterruptedException, ExecutionException {
         URI uri = new URI(url);
         String serviceName = uri.getHost();
-
-        Instance provider = namingService.selectOneHealthyInstance(serviceName);
+        Instance provider =null;
+        try {
+            provider = namingService.selectOneHealthyInstance(serviceName);
+        } catch (Exception e) {
+            return serviceName+" 服务不存在或者无可用实例";
+        }
         String hostName = provider.getIp();
         int port = provider.getPort();
         String targetUri = uri.getRawPath();

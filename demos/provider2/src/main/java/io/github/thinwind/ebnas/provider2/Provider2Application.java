@@ -1,9 +1,13 @@
 package io.github.thinwind.ebnas.provider2;
 
 import java.util.Properties;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.client.utils.NetUtil;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,14 +23,21 @@ public class Provider2Application {
     }
 
     @Bean
-    public CommandLineRunner register(@Value("${ebnas.server-addr}")String serverAddr,@Value("${server.port}")int port) {
+    public CommandLineRunner register(@Value("${ebnas.server-addr}") String serverAddr,
+            @Value("${server.port}") int port, @Value("${ebnas.local-ip:}") String localIP) {
         return args -> {
             try {
                 Properties properties = new Properties();
                 properties.setProperty("serverAddr", serverAddr);
                 // properties.setProperty("namespace", "ebnas");
                 NamingService naming = NamingFactory.createNamingService(properties);
-                naming.registerInstance("provider2", NetUtil.localIP(), port);
+                String ip;
+                if(StringUtils.isBlank(localIP)){
+                    ip =  NetUtil.localIP();
+                }else{
+                    ip = localIP;
+                }
+                naming.registerInstance("provider2", ip, port);
                 System.out.println(naming.getAllInstances("provider2"));
             } catch (Exception e) {
                 e.printStackTrace();
