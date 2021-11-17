@@ -56,7 +56,7 @@ public class TestController {
     
     @GetMapping("/get-proxy")
     public Object getProvider2Proxy() throws Exception {
-        String url = "http://provider2:7031/get-mock";
+        String url = "http://provider2:7031/proxy/get-mock";
         return proxyService.getString(url);
     }
     

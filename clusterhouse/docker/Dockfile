@@ -1,0 +1,25 @@
+FROM mrshang/jre8
+
+# put nacos to /home/ebnas
+RUN mkdir /home/clusterhouse
+COPY clusterhouse/target/ebnas-clusterhouse-1.1.3.jar /home/clusterhouse/
+COPY clusterhouse/docker/startup.sh /home/clusterhouse/
+
+ENV BASE_DIR="/home/clusterhouse/"
+	
+WORKDIR $BASE_DIR
+
+# set startup log dir
+RUN mkdir -p logs \
+	&& cd logs \
+	&& touch start.out \
+	&& ln -sf /dev/stdout start.out \
+	&& ln -sf /dev/stderr start.out
+    
+RUN chmod a+x startup.sh
+
+VOLUME $BASE_DIR/logs
+
+EXPOSE 7031
+
+ENTRYPOINT ["./startup.sh"]

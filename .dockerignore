@@ -1,6 +1,6 @@
 # only need "distribution"
 a*
-c*
+client
 distribution/target/nacos-server-1.1.3/
 doc
 e*
