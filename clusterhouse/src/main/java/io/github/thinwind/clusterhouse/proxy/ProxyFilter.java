@@ -2,6 +2,7 @@ package io.github.thinwind.clusterhouse.proxy;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,20 +37,23 @@ public class ProxyFilter implements Filter {
 
         String serviceName = request.getServerName();
         //查找可用服务
-        Instance instance;
+        HttpHost host=null;
         try {
-            instance = namingService.selectOneHealthyInstance(serviceName);
+            Instance instance = namingService.selectOneHealthyInstance(serviceName);
+            host = new HttpHost(instance.getIp(), instance.getPort());
         } catch (Exception e) {
             e.printStackTrace();
-            instance = null;
         }
-        
-        if (instance == null) {
-            writeError(response, HttpStatus.NOT_FOUND, "服务不存在或者无可用实例");
-            return;
+
+        if (host == null) {
+            String target = request.getHeader("X-Ebnas-Proxy-Target");
+            if (StringUtils.isBlank(target)) {
+                writeError(response, HttpStatus.NOT_FOUND, "服务不存在或者无可用实例");
+                return;
+            }
+            host = HttpHost.create(target);
         }
-        
-        HttpHost host = new HttpHost(instance.getIp(),instance.getPort());
+
         request.setAttribute(ProxyServlet.ATTR_TARGET_HOST, host);
         chain.doFilter(request, response);
     }

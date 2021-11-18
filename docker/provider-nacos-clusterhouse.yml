@@ -1,0 +1,46 @@
+# Use root/mysql as user/password credentials
+version: '3.1'
+
+services:
+
+  nacos1:
+    image: ebnas/nacos:f1
+    command: -m standalone
+    ports:
+      - 8848:8848
+    environment:
+      JAVA_OPT: "-Debnas.cluster-name=cluster1 -Debnas.clusterhouse=${LOCAL_IP}:7031"
+      HOST_IP: ${LOCAL_IP}
+
+  nacos2:
+    image: ebnas/nacos:f1
+    command: -m standalone
+    environment:
+      JAVA_OPT: "-Debnas.cluster-name=cluster2 -Debnas.clusterhouse=clusterhouse:7031 -Dserver.port=8849"
+    networks:
+      - ebnas-net
+
+  provider1:
+    image: ebnas/provider1:f1
+    ports:
+      - 8089:8089
+    environment:
+      JAVA_OPT: "-Debnas.server-addr=${LOCAL_IP}:8848 -Debnas.local-ip=${LOCAL_IP}"
+      
+  provider2:
+    image: ebnas/provider2:f1
+    environment:
+      JAVA_OPT: "-Debnas.server-addr=nacos2:8849"
+    networks:
+      - ebnas-net
+
+  clusterhouse: 
+    image: ebnas/clusterhouse:f1
+    ports:
+      - 7031:7031
+    networks:
+      - ebnas-net
+
+networks:
+  ebnas-net:
+    external: true 
