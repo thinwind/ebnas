@@ -61,6 +61,15 @@ public class PushReceiver implements Runnable {
             NAMING_LOGGER.error("[NA] init udp socket failed", e);
         }
     }
+    
+    public void shutdown() {
+        try {
+            executorService.shutdownNow();
+        }catch (Exception e) {
+            // Just ignore
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void run() {

@@ -97,6 +97,11 @@ public class NacosNamingService implements NamingService {
         beatReactor = new BeatReactor(serverProxy, initClientBeatThreadCount(properties));
         hostReactor = new HostReactor(eventDispatcher, serverProxy, cacheDir, isLoadCacheAtStart(properties), initPollingThreadCount(properties));
     }
+    
+    public void shutdown() {
+        beatReactor.shutdown();
+        hostReactor.shutdown();
+    }
 
     private int initClientBeatThreadCount(Properties properties) {
         if (properties == null) {

@@ -195,20 +195,4 @@ public class HttpClient {
         }
         return sb.toString();
     }
-
-    public static class HttpResult {
-        final public int code;
-        final public String content;
-        final private Map<String, String> respHeaders;
-
-        public HttpResult(int code, String content, Map<String, String> respHeaders) {
-            this.code = code;
-            this.content = content;
-            this.respHeaders = respHeaders;
-        }
-
-        public String getHeader(String name) {
-            return respHeaders.get(name);
-        }
-    }
 }

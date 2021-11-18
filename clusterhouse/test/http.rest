@@ -1,0 +1,40 @@
+POST /openapi/register/ HTTP/1.1
+Host: 127.0.0.1:7031
+Content-Type: application/json
+
+{
+    "clusterName":"cluster1",
+    "ip":"127.0.0.1",
+    "port":8848
+}
+
+###
+POST /openapi/register/ HTTP/1.1
+Host: 127.0.0.1:7031
+Content-Type: application/json
+
+{
+    "clusterName":"cluster2",
+    "ip":"127.0.0.1",
+    "port":8849
+}
+
+
+###
+POST /openapi/register/ HTTP/1.1
+Host: 127.0.0.1:7031
+Content-Type: application/json
+
+{
+    "clusterName":"demo2",
+    "ip":"127.0.0.3",
+    "port":8088
+}
+
+###
+GET /openapi/clusters HTTP/1.1
+Host: 127.0.0.1:7031
+
+### get for now
+GET /openapi/clusters?delay=0 HTTP/1.1
+Host: 127.0.0.1:7031

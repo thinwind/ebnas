@@ -15,8 +15,8 @@ server:
     max-http-post-size: 500MB
     
 ebnas:
-  server-addr: 192.168.31.228:8849
-    
+  server-addr: 192.168.34.228:8849
+  # local-ip: 192.168.34.228
 # spring:
 #   datasource:
 #     url: jdbc:h2:file:~/datagen;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1

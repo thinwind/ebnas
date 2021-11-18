@@ -116,7 +116,7 @@ public class NamingProxy {
             String urlString = "http://" + endpoint + "/nacos/serverlist";
             List<String> headers = builderHeaders();
 
-            HttpClient.HttpResult result = HttpClient.httpGet(urlString, headers, null, UtilAndComs.ENCODING);
+            HttpResult result = HttpClient.httpGet(urlString, headers, null, UtilAndComs.ENCODING);
             if (HttpURLConnection.HTTP_OK != result.code) {
                 throw new IOException("Error while requesting: " + urlString + "'. Server returned: "
                     + result.code);
@@ -408,7 +408,7 @@ public class NamingProxy {
             url = HttpClient.getPrefix() + curServer + api;
         }
 
-        HttpClient.HttpResult result = HttpClient.request(url, headers, params, UtilAndComs.ENCODING, method);
+        HttpResult result = HttpClient.request(url, headers, params, UtilAndComs.ENCODING, method);
         end = System.currentTimeMillis();
 
         MetricsMonitor.getNamingRequestMonitor(method, url, String.valueOf(result.code))
