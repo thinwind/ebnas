@@ -1,6 +1,7 @@
 # only need "distribution"
 a*
-client
+c*
+!clusterhouse
 distribution/target/nacos-server-1.1.3/
 doc
 e*
