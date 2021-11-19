@@ -9,13 +9,13 @@
             <Col span="12">
                 <span class="expand-key">节点IP: </span>
                 <span class="expand-value">{{ item.ip }} : {{ item.port}} </span>
+                <a :href="'http://'+item.ip+':'+item.port+'/nacos'">控制台</a>
             </Col>
             <Col span="12">
                 <span class="expand-key">节点状态: </span>
                 <span class="expand-value">{{ item.status }}</span>
             </Col>
         </Row>
-        
     </div>
 </template>
 <script>
