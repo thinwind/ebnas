@@ -1,0 +1,23 @@
+FROM mrshang/jre8
+
+# put nacos to /home/ebnas
+RUN mkdir /home/ebnas
+COPY demos/provider3/target/ebnas-provider3-1.1.3.jar /home/ebnas/
+COPY demos/provider3/startup.sh /home/ebnas/
+
+ENV BASE_DIR="/home/ebnas"
+	
+WORKDIR $BASE_DIR
+
+# set startup log dir
+RUN mkdir -p logs \
+	&& cd logs \
+	&& touch start.out 
+    
+RUN chmod a+x startup.sh
+
+VOLUME $BASE_DIR/logs
+
+EXPOSE 8099
+
+ENTRYPOINT ["./startup.sh"]

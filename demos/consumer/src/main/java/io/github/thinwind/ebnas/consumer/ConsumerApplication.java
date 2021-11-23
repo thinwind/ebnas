@@ -26,8 +26,8 @@ public class ConsumerApplication {
                 properties.setProperty("serverAddr", localClusterAddr);
                 // properties.setProperty("namespace", "ebnas");
                 NamingService naming = NamingFactory.createNamingService(properties);
-                naming.registerInstance("consumer1", NetUtil.localIP(), port);
-                System.out.println(naming.getAllInstances("provider1"));
+                naming.registerInstance("sunshine-life", NetUtil.localIP(), port);
+                System.out.println(naming.getAllInstances("sunshine-life"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

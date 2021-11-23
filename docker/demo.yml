@@ -1,0 +1,77 @@
+# Use root/mysql as user/password credentials
+version: '3.1'
+
+services:
+
+  creditcard-cluster:
+    image: ebnas/nacos:f1
+    command: -m standalone
+    ports:
+      - 8848:8848
+    environment:
+      JAVA_OPT: "-Debnas.cluster-name=credit -Debnas.clusterhouse=clusterhouse:7031"
+      HOST_IP: ${LOCAL_IP}
+    networks:
+      - ebnas-net
+
+  ebbank-cluster:
+    image: ebnas/nacos:f1
+    command: -m standalone
+    ports:
+      - 8849:8849
+    environment:
+      JAVA_OPT: "-Debnas.cluster-name=ebank -Debnas.clusterhouse=clusterhouse:7031 -Dserver.port=8849"
+      HOST_IP: ${LOCAL_IP}
+    networks:
+      - ebnas-net
+      
+  finance-cluster:
+    image: ebnas/nacos:f1
+    command: -m standalone
+    environment:
+      JAVA_OPT: "-Debnas.cluster-name=yongming -Debnas.clusterhouse=clusterhouse:7031 -Dserver.port=8850"
+    networks:
+      - ebnas-net
+      
+  sunshine-life:
+    image: ebnas/consumer:f1
+    ports:
+      - 9089:9089
+    environment:
+      JAVA_OPT: "-Debnas.local-cluster.address=${LOCAL_IP}:8848 -Debnas.local-ip=${LOCAL_IP} -Debnas.local-cluster.name=credit -Debnas.clusterhouse=${LOCAL_IP}:7031"
+
+  retail:
+    image: ebnas/provider1:f1
+    ports:
+      - 8089:8089
+    environment:
+      JAVA_OPT: "-Debnas.server-addr=creditcard-cluster:8848 -Debnas.local-ip=${LOCAL_IP}"
+    networks:
+      - ebnas-net
+      
+  load-recommendation:
+    image: ebnas/provider2:f1
+    ports:
+      - 8099:8099
+    environment:
+      JAVA_OPT: "-Debnas.server-addr=ebbank-cluster:8849 -Debnas.local-ip=${LOCAL_IP}"
+    networks:
+      - ebnas-net
+
+  insurance-recommendation:
+    image: ebnas/provider3:f1
+    environment:
+      JAVA_OPT: "-Debnas.server-addr=finance-cluster:8850"
+    networks:
+      - ebnas-net
+
+  clusterhouse: 
+    image: ebnas/clusterhouse:f1
+    ports:
+      - 7031:7031
+    networks:
+      - ebnas-net
+
+networks:
+  ebnas-net:
+    external: true 

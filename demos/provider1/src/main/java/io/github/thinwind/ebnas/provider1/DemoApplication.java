@@ -38,8 +38,8 @@ public class DemoApplication {
                 }else{
                     ip = localIP;
                 }
-                naming.registerInstance("provider1",ip, port);
-                System.out.println(naming.getAllInstances("provider1"));
+                naming.registerInstance("credit-retail",ip, port);
+                System.out.println(naming.getAllInstances("credit-retail"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

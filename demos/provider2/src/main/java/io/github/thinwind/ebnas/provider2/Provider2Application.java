@@ -37,8 +37,8 @@ public class Provider2Application {
                 }else{
                     ip = localIP;
                 }
-                naming.registerInstance("provider2", ip, port);
-                System.out.println(naming.getAllInstances("provider2"));
+                naming.registerInstance("loan-recommendation", ip, port);
+                System.out.println(naming.getAllInstances("loan-recommendation"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

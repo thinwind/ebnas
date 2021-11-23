@@ -1,9 +1,9 @@
 POST /openapi/register/ HTTP/1.1
 Host: 127.0.0.1:7031
-Content-Type: application/json
+Content-Type: application/json;charset=utf-8
 
 {
-    "clusterName":"cluster1",
+    "clusterName":"信用卡集群",
     "ip":"127.0.0.1",
     "port":8848
 }

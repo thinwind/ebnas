@@ -33,7 +33,9 @@ public class PostController {
     @PostMapping("/post-mock")
     public Object postMock() throws IOException {
         Map<String, String> result = new HashMap<>();
-        result.put("Echo", "Hello From Cluster2.Provider1 Post");
+        result.put("recommend", "光大科技《黑客马拉松》定制版年金险");
+        result.put("guarantee", "今日订购，终身锁定8%复利收益");
+        result.put("p.s.", "满意请打100分哦");
         return result;
     }
 }

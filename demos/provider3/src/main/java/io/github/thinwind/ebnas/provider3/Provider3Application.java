@@ -26,8 +26,8 @@ public class Provider3Application {
                 properties.setProperty("serverAddr", serverAddr);
                 // properties.setProperty("namespace", "ebnas");
                 NamingService naming = NamingFactory.createNamingService(properties);
-                naming.registerInstance("provider1", NetUtil.localIP(), port);
-                System.out.println(naming.getAllInstances("provider1"));
+                naming.registerInstance("insurance-recommendation", NetUtil.localIP(), port);
+                System.out.println(naming.getAllInstances("insurance-recommendation"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -30,7 +30,7 @@ server:
 spring:
   datasource:
     # url: jdbc:h2:file:~/clusterhouse;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1
-    url: jdbc:h2:mem:clusterhouse
+    url: jdbc:h2:mem:clusterhouse;DB_CLOSE_DELAY=-1;MODE=MySQL
     username: SA
     password: 123456
     driver-class-name: org.h2.Driver

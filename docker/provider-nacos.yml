@@ -3,22 +3,31 @@ version: '3.1'
 
 services:
 
-  nacos1:
+  cluster1:
     image: ebnas/nacos:f1
     command: -m standalone
     ports:
       - 8848:8848
     environment:
-      JAVA_OPT: "-Debnas.cluster-name=cluster1 -Debnas.clusterhouse=${LOCAL_IP}:7031"
+      JAVA_OPT: "-Debnas.cluster-name=信用卡服务集群 -Debnas.clusterhouse=${LOCAL_IP}:7031"
       HOST_IP: ${LOCAL_IP}
 
-  nacos2:
+  cluster2:
     image: ebnas/nacos:f1
     command: -m standalone
     ports:
       - 8849:8849
     environment:
-      JAVA_OPT: "-Debnas.cluster-name=cluster2 -Debnas.clusterhouse=${LOCAL_IP}:7031 -Dserver.port=8849"
+      JAVA_OPT: "-Debnas.cluster-name=总行服务集群 -Debnas.clusterhouse=${LOCAL_IP}:7031 -Dserver.port=8849"
+      HOST_IP: ${LOCAL_IP}
+      
+  cluster3:
+    image: ebnas/nacos:f1
+    command: -m standalone
+    ports:
+      - 8850:8850
+    environment:
+      JAVA_OPT: "-Debnas.cluster-name=永明服务集群 -Debnas.clusterhouse=${LOCAL_IP}:7031 -Dserver.port=8850"
       HOST_IP: ${LOCAL_IP}
 
   provider1:

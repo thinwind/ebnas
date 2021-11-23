@@ -35,29 +35,23 @@ public class TestController {
     @Autowired
     ProxyService proxyService;
 
-    @GetMapping("/get-provider2")
+    @GetMapping("/loan-recommended")
     public Object getProvider2() throws Exception {
-        String url = "http://provider2/get-mock";
+        String url = "http://loan-recommendation/get-mock";
         return testService.getString(url);
     }
     
     
-    @PostMapping("/post-provider1")
+    @PostMapping("/credit-retail")
     public Object postProvider1() throws Exception {
-        String url = "http://provider1/post-mock";
+        String url = "http://credit-retail/post-mock";
         return testService.postString(url);
     }
 
-    @PostMapping("/post-proxy")
+    @PostMapping("/insurance-recommended")
     public Object postProvider1Proxy() throws Exception {
-        String url = "http://provider1:7031/proxy/post-mock";
+        String url = "http://insurance-recommendation:7031/proxy/post-mock";
         return proxyService.postString(url);
-    }
-    
-    @GetMapping("/get-proxy")
-    public Object getProvider2Proxy() throws Exception {
-        String url = "http://provider2:7031/proxy/get-mock";
-        return proxyService.getString(url);
     }
     
 }

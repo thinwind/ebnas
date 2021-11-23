@@ -3,4 +3,4 @@
 # Mac 获取ip
 export LOCAL_IP=`ifconfig | grep 192.168 | awk '{print $2}'`
 
-docker-compose -f ./provider-nacos-clusterhouse.yml -p provider-nacos-clusterhouse down
+docker-compose -f ./demo.yml -p demo down

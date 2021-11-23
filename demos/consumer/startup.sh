@@ -11,5 +11,5 @@ fi
 
 # start
 echo "$JAVA ${JAVA_OPT}" > ${BASE_DIR}/logs/start.out 2>&1 &
-nohup $JAVA ${JAVA_OPT} -jar ebnas-provider3-1.1.3.jar >> ${BASE_DIR}/logs/start.out 2>&1
+nohup $JAVA ${JAVA_OPT} -jar ebnas-consumer-1.1.3.jar >> ${BASE_DIR}/logs/start.out 2>&1
 tail -f ${BASE_DIR}/logs/start.out

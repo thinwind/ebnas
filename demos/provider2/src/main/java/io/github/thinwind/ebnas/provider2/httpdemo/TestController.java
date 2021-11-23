@@ -33,7 +33,9 @@ public class TestController {
     @GetMapping("/get-mock")
     public Object getMock() throws IOException {
         Map<String, String> result = new HashMap<>();
-        result.put("Echo", "Hello From Provider2 Get");
+        result.put("recommend", "光大科技《黑客马拉松》定制版贷款");
+        result.put("discount", "今天办理享受利息8折");
+        result.put("promote", "您要了解永明保险吗？");
         return result;
     }
 }
